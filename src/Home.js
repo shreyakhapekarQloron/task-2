@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useGlobalContext } from "./Context";
 import Pagination from "./Pagination";
+import { useAuth0 } from "@auth0/auth0-react";
+
 
 const Home = () => {
   // Use the custom hook to access data, loading state, and error from the context
@@ -8,6 +10,7 @@ const Home = () => {
   const [sortedData, setSortedData] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [postsPerPage, setPostsPerPage] = useState(9);
+  const { loginWithRedirect, logout, isAuthenticated } = useAuth0();
 
   // Calculate the indexes of the items to display on the current page
   const lastPostIndex = currentPage * postsPerPage;
@@ -45,7 +48,17 @@ const Home = () => {
   // If data is fetched successfully, display the data
   return (
     <>
-      <button className="btn">Logout</button>
+    <div className="btn-container">
+      {isAuthenticated ? (
+        <button className="btn" onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })}>
+        Log Out
+      </button>
+      ) : (
+        <button className="btn" onClick={() => loginWithRedirect()}>Log In</button>
+      )};
+    
+    </div>
+      
 
       <div className="btn-container">
         <button className="btn" onClick={ascEvent}>
