@@ -1,0 +1,109 @@
+:root {
+  --pink: #e84393;
+  --black: #222;
+  --white: #fff;
+  --light-bg: #f5f5f5;
+  --light-color: #777;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+  outline: none;
+  border: none;
+  text-decoration: none;
+  text-transform: capitalize;
+  transition: all 0.2s linear;
+}
+
+.product_container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2rem 9%;
+  background: #eee;
+  margin-top: 20px;
+}
+
+.card {
+  width: calc(33.33% - 16px);
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 16px;
+  text-align: center;
+  transition: transform 0.3s ease-in-out;
+  margin-bottom: 16px;
+
+  &:hover {
+    transform: translateX(1.5rem);
+  }
+
+  .card-img{
+    height: 200px;
+    overflow: hidden;
+  }
+
+  .card-img img {
+    max-width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 8px;
+  }
+}
+
+.btn-container{
+  display: flex;
+  justify-content: space-between;
+  margin: 0 auto;
+  max-width: 750px;
+}
+
+.btn{
+  font-size: 1.7rem;
+  color: #fff;
+  background: var(--black);
+  border-radius: .5rem;
+  padding: 0.8rem 3rem;
+  cursor: pointer;
+  display: block;
+  margin: 2rem auto;
+
+  &:hover{
+    background-color: var(--pink);
+    letter-spacing: .1rem;
+  }
+}
+
+/* pagination css */
+.pagination{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.pagination button{
+  width: 40px;
+  height: 40px;
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 16px;
+  margin: 0 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  background: var(--white);
+  color: var(--black);
+  border: 1.5px solid var(--black);
+  transition: all 0.3s ease;
+}
+
+.pagination button.active{
+  font-weight: 900;
+  border-color: var(--white);
+  background: var(--pink);
+  color: var(--white);
+}
