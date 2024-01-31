@@ -3,11 +3,10 @@ import { useGlobalContext } from "../Context";
 import "./Cart.css";
 
 export const Cart = () => {
-  const { cart, data } = useGlobalContext();
+  const { cart, data, dispatch } = useGlobalContext();
 
   // Filter out items in the cart with quantity greater than 0
   const cartItems = Object.keys(cart).filter((key) => cart[key] > 0);
-
 
   // Calculate the total amount of items in the cart
   const getTotalCartAmount = () => {
@@ -24,6 +23,15 @@ export const Cart = () => {
     return totalAmount;
   };
 
+  // Function to increase quantity
+  const increaseQuantity = (itemId) => {
+    if (dispatch) {
+      dispatch({ type: "ADD_TO_CART", payload: itemId });
+    } else {
+      console.error("Dispatch function not available.");
+    }
+  };
+
   return (
     <div className="cart">
       <div>
@@ -38,6 +46,10 @@ export const Cart = () => {
                   <>
                     <span>{itemInfo.title}</span>
                     <span>Quantity: {cart[itemId]}</span>
+
+                    <button onClick={() => increaseQuantity(itemId)}>
+                      Increase Quantity
+                    </button>
                   </>
                 )}
               </li>
