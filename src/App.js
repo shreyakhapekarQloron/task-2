@@ -1,7 +1,10 @@
 import "./App.css";
 import Home from "./Home";
 import { AppProvider } from "./Context";
-import { Auth0Provider } from '@auth0/auth0-react';
+import { Auth0Provider } from "@auth0/auth0-react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Navbar } from "./components/navbar";
+import { Cart } from "./cart";
 
 const App = () => {
   return (
@@ -13,10 +16,17 @@ const App = () => {
           redirect_uri: window.location.origin,
         }}
       >
-
-        <AppProvider>
-          <Home />
-        </AppProvider>
+        <div>
+          <AppProvider>
+            <Router>
+              <Navbar />
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/cart" element={<Cart />} />
+              </Routes>
+            </Router>
+          </AppProvider>
+        </div>
       </Auth0Provider>
     </>
   );

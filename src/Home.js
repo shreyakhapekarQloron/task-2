@@ -1,20 +1,24 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useGlobalContext } from "./Context";
 import Pagination from "./Pagination";
 import { useAuth0 } from "@auth0/auth0-react";
-
+import {Cart} from "./cart"
 
 const Home = () => {
   // Use the custom hook to access data, loading state, and error from the context
-  const { isLoading, data, error } = useGlobalContext();
+  const { isLoading, data, error, dispatch, cart } = useGlobalContext();
+
   const [sortedData, setSortedData] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [postsPerPage, setPostsPerPage] = useState(9);
   const { loginWithRedirect, logout, isAuthenticated } = useAuth0();
+  const [showCart, setShowCart] = useState(false);  // State to control cart visibility
+
 
   // Calculate the indexes of the items to display on the current page
   const lastPostIndex = currentPage * postsPerPage;
   const firstPostIndex = lastPostIndex - postsPerPage;
+
   const currentPosts = sortedData
     ? sortedData.slice(firstPostIndex, lastPostIndex)
     : data.slice(firstPostIndex, lastPostIndex);
@@ -33,6 +37,22 @@ const Home = () => {
     setSortedData(null);
   };
 
+  const addToCart = (itemId) => {
+    if (dispatch) {
+      dispatch({ type: "ADD_TO_CART", payload: itemId });
+    } else {
+      console.error("Dispatch function not available.");
+    }
+  };
+  
+  const removeFromCart = (itemId) => {
+    if (dispatch) {
+      dispatch({ type: "REMOVE_FROM_CART", payload: itemId });
+    } else {
+      console.error("Dispatch function not available.");
+    }
+  };
+
   // If data is still loading, display a loading message
   if (isLoading) {
     return <p>Loading....</p>;
@@ -48,17 +68,23 @@ const Home = () => {
   // If data is fetched successfully, display the data
   return (
     <>
-    <div className="btn-container">
-      {isAuthenticated ? (
-        <button className="btn" onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })}>
-        Log Out
-      </button>
-      ) : (
-        <button className="btn" onClick={() => loginWithRedirect()}>Log In</button>
-      )};
-    
-    </div>
-      
+      <div className="btn-container">
+        {isAuthenticated ? (
+          <button
+            className="btn"
+            onClick={() =>
+              logout({ logoutParams: { returnTo: window.location.origin } })
+            }
+          >
+            Log Out
+          </button>
+        ) : (
+          <button className="btn" onClick={() => loginWithRedirect()}>
+            Log In
+          </button>
+        )}
+        ;
+      </div>
 
       <div className="btn-container">
         <button className="btn" onClick={ascEvent}>
@@ -75,7 +101,8 @@ const Home = () => {
       <Pagination
         postsPerPage={postsPerPage}
         totalPosts={data.length}
-        setCurrentPage={setCurrentPage} currentPage={currentPage}
+        setCurrentPage={setCurrentPage}
+        currentPage={currentPage}
       />
 
       <div className="product_container">
@@ -84,6 +111,7 @@ const Home = () => {
           const { id, title, category, image, description, price, rating } =
             item;
 
+          
           return (
             <div className="card" key={id}>
               <div className="card-img">
@@ -92,10 +120,24 @@ const Home = () => {
               <h2>{title}</h2>
               <p>$ {price}</p>
               <h3>{category}</h3>
+              <button className="addToCartBtn" onClick={() => addToCart(id)}>
+                Add to Cart
+              </button>
+              <button className="addToCartBtn" onClick={() => removeFromCart(id)}>
+                Remove from Cart
+              </button>
             </div>
           );
         })}
       </div>
+
+      <div className="btn-container">
+        {/* ... (rest of your code) */}
+        <button className="btn" onClick={() => setShowCart(!showCart)}>
+          {showCart ? "Hide Cart" : "Show Cart"}
+        </button>
+      </div>
+
     </>
   );
 };
