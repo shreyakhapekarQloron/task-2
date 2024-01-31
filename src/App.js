@@ -4,7 +4,7 @@ import { AppProvider } from "./Context";
 import { Auth0Provider } from "@auth0/auth0-react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Navbar } from "./components/navbar";
-import { Cart } from "./cart";
+import { Cart } from "./Cart/Cart";
 
 const App = () => {
   return (

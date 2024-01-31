@@ -17,23 +17,23 @@ const reducer = (state, action) => {
       };
 
     case "ADD_TO_CART":
+      const itemId = action.payload;
+      const updatedCart = { ...state.cart };
+      updatedCart[itemId] = (updatedCart[itemId] || 0) + 1;
+
       return {
         ...state,
-        cart: {
-          ...state.cart,
-          [action.payload]: state.cart[action.payload] + 1,
-        },
+        cart: updatedCart,
       };
+
     case "REMOVE_FROM_CART":
-      // You can implement logic to decrement or remove an item from the cart
-      // based on your requirements.
-      // For simplicity, let's just decrement the quantity for now.
+      const removedItemId = action.payload;
+      const updatedRemovedCart = { ...state.cart };
+      updatedRemovedCart[removedItemId] = Math.max(0, state.cart[removedItemId] - 1);
+
       return {
         ...state,
-        cart: {
-          ...state.cart,
-          [action.payload]: Math.max(0, state.cart[action.payload] - 1),
-        },
+        cart: updatedRemovedCart,
       };
 
     default:

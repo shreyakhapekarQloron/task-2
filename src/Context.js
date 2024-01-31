@@ -12,11 +12,13 @@ const Context = createContext();
 
 const getDefaultCart = (data) => {
   let cart = {};
-  for (let i = 1; i < data.length + 1; i++) {
-    cart[i] = 0;
-  }
+  data.forEach((item) => {
+    cart[item.id] = 0;
+  });
   return cart;
 };
+
+
 
 // Define the initial state for the context
 const initialState = {
@@ -57,50 +59,9 @@ const AppProvider = ({ children }) => {
     fetchData(); // Fetch data first
   }, []);
 
-
-//   const [cartItems, setCartItems] = useState(() => getDefaultCart([])); 
-
-//   const getTotalCartAmount = () => {
-//     let totalAmount = 0;
-//     for (const item in cartItems) {
-//       if (cartItems[item] > 0) {
-//         let itemInfo = state.data.find((d) => d.id === Number(item));
-
-//         // Ensure itemInfo is found before accessing its properties
-//         if (itemInfo) {
-//           totalAmount += cartItems[item] * itemInfo.price;
-//         }
-//       }
-//     }
-//     return totalAmount;
-//   };
-
-//   const addToCart = (itemId) => {
-//     setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] + 1 }));
-//   };
-
-//   const removeFromCart = (itemId) => {
-//     setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] - 1 }));
-//   };
-
-//   const updateCartItemCount = (newAmount, itemId) => {
-//     setCartItems((prev) => ({ ...prev, [itemId]: newAmount }));
-//   };
-
-//   const checkout = () => {
-//     setCartItems(getDefaultCart());
-//   };
-
-
-
   const contextValue = {
     ...state,
     dispatch,
-    // addToCart,
-    // updateCartItemCount,
-    // removeFromCart,
-    // getTotalCartAmount,
-    // checkout,
   };
 
   console.log("Context Values:", contextValue);
@@ -111,7 +72,17 @@ const AppProvider = ({ children }) => {
 
 // Create a custom hook to consume the context in functional components
 const useGlobalContext = () => {
-  return useContext(Context);
+  const context = useContext(Context);
+
+  // Log context for debugging
+  console.log("Context:", context);
+
+  if (!context) {
+    console.error("Context not available. Make sure AppProvider is properly set up.");
+    return {};
+  }
+
+  return context;
 };
 
 export { AppProvider, useGlobalContext };

@@ -1,8 +1,8 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useGlobalContext } from "./Context";
 import Pagination from "./Pagination";
 import { useAuth0 } from "@auth0/auth0-react";
-import {Cart} from "./cart"
+import { Cart } from "./Cart/Cart";
 
 const Home = () => {
   // Use the custom hook to access data, loading state, and error from the context
@@ -12,8 +12,7 @@ const Home = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [postsPerPage, setPostsPerPage] = useState(9);
   const { loginWithRedirect, logout, isAuthenticated } = useAuth0();
-  const [showCart, setShowCart] = useState(false);  // State to control cart visibility
-
+  const [showCart, setShowCart] = useState(false); // State to control cart visibility
 
   // Calculate the indexes of the items to display on the current page
   const lastPostIndex = currentPage * postsPerPage;
@@ -38,6 +37,7 @@ const Home = () => {
   };
 
   const addToCart = (itemId) => {
+    console.log("Adding to Cart:", itemId);
     if (dispatch) {
       dispatch({ type: "ADD_TO_CART", payload: itemId });
     } else {
@@ -46,12 +46,14 @@ const Home = () => {
   };
   
   const removeFromCart = (itemId) => {
+    console.log("Removing from Cart:", itemId);
     if (dispatch) {
       dispatch({ type: "REMOVE_FROM_CART", payload: itemId });
     } else {
       console.error("Dispatch function not available.");
     }
   };
+  
 
   // If data is still loading, display a loading message
   if (isLoading) {
@@ -83,7 +85,6 @@ const Home = () => {
             Log In
           </button>
         )}
-        ;
       </div>
 
       <div className="btn-container">
@@ -107,11 +108,11 @@ const Home = () => {
 
       <div className="product_container">
         {currentPosts.map((item) => {
-          // object destructoring: to prevent writing currProduct. again & again.
-          const { id, title, category, image, description, price, rating } =
-            item;
+          // object destructuring: to prevent writing currProduct. again & again.
+          const { id, title, category, image, description, price, rating } = item;
 
-          
+          const isInCart = cart[id] > 0;
+
           return (
             <div className="card" key={id}>
               <div className="card-img">
@@ -120,24 +121,22 @@ const Home = () => {
               <h2>{title}</h2>
               <p>$ {price}</p>
               <h3>{category}</h3>
-              <button className="addToCartBtn" onClick={() => addToCart(id)}>
-                Add to Cart
-              </button>
-              <button className="addToCartBtn" onClick={() => removeFromCart(id)}>
-                Remove from Cart
-              </button>
+
+              {isInCart ? (
+                // Render "Remove from Cart" button when item is in the cart
+                <button className="addToCartBtn" onClick={() => removeFromCart(id)}>
+                  Remove from Cart
+                </button>
+              ) : (
+                // Render "Add to Cart" button when item is not in the cart
+                <button className="addToCartBtn" onClick={() => addToCart(id)}>
+                  Add to Cart
+                </button>
+              )}
             </div>
           );
         })}
-      </div>
-
-      <div className="btn-container">
-        {/* ... (rest of your code) */}
-        <button className="btn" onClick={() => setShowCart(!showCart)}>
-          {showCart ? "Hide Cart" : "Show Cart"}
-        </button>
-      </div>
-
+      </div> 
     </>
   );
 };
